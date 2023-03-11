@@ -1,12 +1,14 @@
 const { Book } = require("../models");
 
 exports.createBook = async (req, res) => {
-  const book = req.body;
-  //   console.log(book);
+  try {
+    const book = req.body;
+    const newBook = await Book.create(book);
 
-  const newBook = await Book.create(book);
-
-  res.status(201).json(newBook);
+    res.status(201).json(newBook);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 };
 
 exports.readAll = async (req, res) => {
@@ -17,7 +19,7 @@ exports.readAll = async (req, res) => {
 exports.getBookById = async (req, res) => {
   try {
     const bookId = req.params.id;
-    console.log(`ID from getBook ${bookId}`);
+    // console.log(`ID from getBook ${bookId}`);
     const book = await Book.findByPk(bookId);
 
     if (book === null) {
@@ -33,7 +35,7 @@ exports.getBookById = async (req, res) => {
 exports.updateBook = async (req, res) => {
   try {
     const bookId = req.params.id;
-    console.log(`ID from updateBook ${bookId}`);
+    // console.log(`ID from updateBook ${bookId}`);
     const updateData = {
       author: req.body.author,
     };

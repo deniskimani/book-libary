@@ -28,6 +28,32 @@ describe("/books", () => {
         expect(newBookRecord.author).to.equal("Margaret Ogola");
         expect(newBookRecord.genre).to.equal("Fiction");
       });
+
+      it("throws error when theres no title", async () => {
+        const response = await request(app).post("/books").send({
+          author: "Margaret Ogola",
+          genre: "Fiction",
+          ISBN: "ISBN-13, 978-9966882059",
+        });
+
+        expect(response.status).to.equal(400);
+        expect(response.body.error).to.equal(
+          "notNull Violation: Book.title cannot be null"
+        );
+      });
+
+      it("throws error when theres no author", async () => {
+        const response = await request(app).post("/books").send({
+          title: "The River And The Source",
+          genre: "Fiction",
+          ISBN: "ISBN-13, 978-9966882059",
+        });
+
+        expect(response.status).to.equal(400);
+        expect(response.body.error).to.equal(
+          "notNull Violation: Book.author cannot be null"
+        );
+      });
     });
   });
   describe("with records in the database", () => {

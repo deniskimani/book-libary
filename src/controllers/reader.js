@@ -2,10 +2,40 @@ const { Reader } = require("../models");
 
 exports.create = async (req, res) => {
   const reader = req.body;
+  const validate = (email) => {
+    return String(reader.email)
+      .toLowerCase()
+      .match(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+  };
 
-  const newReader = await Reader.create(reader);
+  if (
+    reader.password.length >= 8 &&
+    !reader.name === false &&
+    !reader.email === false &&
+    validate() !== null
+  ) {
+    const newReader = await Reader.create(reader);
 
-  res.status(201).json(newReader);
+    res.status(201).json(newReader);
+  }
+
+  if (
+    reader.password.length < 8
+    // !reader.name === false &&
+    // !reader.email === false
+  ) {
+    res.status(400).json({ message: "Password must be 8 characters or more" });
+  }
+  if (validate() === null && !reader.email === false) {
+    res
+      .status(400)
+      .json({ message: "Please check if your email format is correct" });
+  }
+  if (!reader.email === true || !reader.name === true) {
+    res.status(400).json({ message: "Name and email fields cannot be empty" });
+  }
 };
 
 exports.readAll = async (req, res) => {
@@ -15,7 +45,6 @@ exports.readAll = async (req, res) => {
 
 exports.getReaderById = async (req, res) => {
   const readerId = req.params.id;
-  console.log(`ID from getReader ${readerId}`);
   const reader = await Reader.findByPk(readerId);
 
   if (reader === null) {
@@ -28,7 +57,6 @@ exports.getReaderById = async (req, res) => {
 exports.updateReader = async (req, res) => {
   try {
     const readerId = req.params.id;
-    console.log(`ID from update ${readerId}`);
     const updateData = {
       email: req.body.email,
     };

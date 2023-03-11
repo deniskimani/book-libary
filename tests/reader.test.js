@@ -16,6 +16,7 @@ describe("/readers", () => {
         const response = await request(app).post("/readers").send({
           name: "Elizabeth Bennet",
           email: "future_ms_darcy@gmail.com",
+          password: "12345678",
         });
         const newReaderRecord = await Reader.findByPk(response.body.id, {
           raw: true,
@@ -25,6 +26,56 @@ describe("/readers", () => {
         expect(response.body.name).to.equal("Elizabeth Bennet");
         expect(newReaderRecord.name).to.equal("Elizabeth Bennet");
         expect(newReaderRecord.email).to.equal("future_ms_darcy@gmail.com");
+      });
+
+      it("throws error if name field is empty", async () => {
+        const response = await request(app).post("/readers").send({
+          email: "future_ms_darcy@gmail.com",
+          password: "12345678",
+        });
+
+        expect(response.status).to.equal(400);
+        expect(response.body.message).to.equal(
+          "Name and email fields cannot be empty"
+        );
+      });
+
+      it("throws error if email field is empty", async () => {
+        const response = await request(app).post("/readers").send({
+          name: "Elizabeth Bennet",
+          password: "12345678",
+        });
+
+        expect(response.status).to.equal(400);
+        expect(response.body.message).to.equal(
+          "Name and email fields cannot be empty"
+        );
+      });
+
+      it("throws error if password is less than 8 characters", async () => {
+        const response = await request(app).post("/readers").send({
+          name: "Elizabeth Bennet",
+          email: "future_ms_darcy@gmail.com",
+          password: "1234567",
+        });
+
+        expect(response.status).to.equal(400);
+        expect(response.body.message).to.equal(
+          "Password must be 8 characters or more"
+        );
+      });
+
+      it("throws error if email is incorrect", async () => {
+        const response = await request(app).post("/readers").send({
+          name: "Elizabeth Bennet",
+          email: "future_ms_darcygmail.com",
+          password: "12345678",
+        });
+
+        expect(response.status).to.equal(400);
+        expect(response.body.message).to.equal(
+          "Please check if your email format is correct"
+        );
       });
     });
   });
@@ -37,9 +88,18 @@ describe("/readers", () => {
         Reader.create({
           name: "Elizabeth Bennet",
           email: "future_ms_darcy@gmail.com",
+          password: "12345678",
         }),
-        Reader.create({ name: "Arya Stark", email: "vmorgul@me.com" }),
-        Reader.create({ name: "Lyra Belacqua", email: "darknorth123@msn.org" }),
+        Reader.create({
+          name: "Arya Stark",
+          email: "vmorgul@me.com",
+          password: "12345678",
+        }),
+        Reader.create({
+          name: "Lyra Belacqua",
+          email: "darknorth123@msn.org",
+          password: "12345678",
+        }),
       ]);
     });
 
