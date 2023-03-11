@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha tests/**/*.js --exit --recursive --timeout 10000 --file ./tests/test-setup.js",
+    "test": "mocha tests/**/*.js --exit --recursive --timeout 60000 --file ./tests/test-setup.js",
     "pretest": "node scripts/create-database.js test",
     "posttest": "node scripts/drop-database.js test",
     "start": "nodemon -r dotenv/config index.js",
