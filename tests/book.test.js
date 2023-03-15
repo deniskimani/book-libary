@@ -4,9 +4,12 @@ const { Book } = require("../src/models");
 const app = require("../src/app");
 
 describe("/books", () => {
-  before(async () => Book.sequelize.sync());
-
-  beforeEach(async () => {
+  try {
+    before(() => Book.sequelize.sync());
+  } catch (error) {
+    console.log(error.Promise);
+  }
+  afterEach(async () => {
     await Book.destroy({ where: {} });
   });
 

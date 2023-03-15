@@ -1,40 +1,38 @@
 const { Reader } = require("../models");
 
 exports.create = async (req, res) => {
-  const reader = req.body;
-  const validate = (email) => {
-    return String(reader.email)
-      .toLowerCase()
-      .match(
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      );
-  };
+  try {
+    const reader = req.body;
 
-  if (
-    reader.password.length >= 8 &&
-    !reader.name === false &&
-    !reader.email === false &&
-    validate() !== null
-  ) {
     const newReader = await Reader.create(reader);
-
     res.status(201).json(newReader);
-  }
-
-  if (
-    reader.password.length < 8
-    // !reader.name === false &&
-    // !reader.email === false
-  ) {
-    res.status(400).json({ message: "Password must be 8 characters or more" });
-  }
-  if (validate() === null && !reader.email === false) {
-    res
-      .status(400)
-      .json({ message: "Please check if your email format is correct" });
-  }
-  if (!reader.email === true || !reader.name === true) {
-    res.status(400).json({ message: "Name and email fields cannot be empty" });
+  } catch (error) {
+    console.log(error.message);
+    if (error.message === "notNull Violation: Reader.name cannot be null") {
+      res
+        .status(400)
+        .json({ message: "Name and email fields cannot be empty" });
+    }
+    if (error.message === "notNull Violation: Reader.email cannot be null") {
+      res
+        .status(400)
+        .json({ message: "Name and email fields cannot be empty" });
+    }
+    if (
+      error.message === "Validation error: Validation isEmail on email failed"
+    ) {
+      res
+        .status(400)
+        .json({ message: "Please check if your email format is correct" });
+    }
+    if (
+      error.message ===
+      "Validation error: Password should be 8 or more characters"
+    ) {
+      res
+        .status(400)
+        .json({ message: "Password must be 8 characters or more" });
+    }
   }
 };
 

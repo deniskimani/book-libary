@@ -12,7 +12,13 @@ module.exports = (connection, DataTypes) => {
     password: {
       type: DataTypes.STRING,
       allowNull: false,
-      validate: { min: 8 },
+      validate: {
+        isValid(value) {
+          if (value.length < 8) {
+            throw new Error("Password should be 8 or more characters");
+          }
+        },
+      },
     },
   };
 

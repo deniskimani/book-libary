@@ -4,9 +4,9 @@ const { Reader } = require("../src/models");
 const app = require("../src/app");
 
 describe("/readers", () => {
-  before(async () => Reader.sequelize.sync());
+  before(() => Reader.sequelize.sync());
 
-  beforeEach(async () => {
+  afterEach(async () => {
     await Reader.destroy({ where: {} });
   });
 
