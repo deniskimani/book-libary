@@ -35,9 +35,7 @@ describe("/readers", () => {
         });
 
         expect(response.status).to.equal(400);
-        expect(response.body.message).to.equal(
-          "Name and email fields cannot be empty"
-        );
+        expect(response.body.message).to.equal("Name fields cannot be empty");
       });
 
       it("throws error if email field is empty", async () => {
@@ -47,9 +45,7 @@ describe("/readers", () => {
         });
 
         expect(response.status).to.equal(400);
-        expect(response.body.message).to.equal(
-          "Name and email fields cannot be empty"
-        );
+        expect(response.body.message).to.equal("Email fields cannot be empty");
       });
 
       it("throws error if password is less than 8 characters", async () => {

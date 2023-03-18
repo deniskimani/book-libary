@@ -1,15 +1,5 @@
-const { Client } = require('pg');
-const { decideEnv } = require('./env-helper');
-
-const loadEnv = () => {
-  decideEnv();
-
-  const databaseName = process.env.PGDATABASE;
-
-  delete process.env.PGDATABASE;
-
-  return databaseName;
-};
+const { Client } = require("pg");
+const { decideEnv, loadEnv } = require("./env-helper");
 
 const dropDatabase = async (databaseName) => {
   const client = new Client();
@@ -20,7 +10,7 @@ const dropDatabase = async (databaseName) => {
 
     await client.query(`DROP DATABASE ${databaseName} WITH (FORCE)`);
 
-    console.log('Database destroyed!');
+    console.log("Database destroyed!");
   } catch (err) {
     console.log(err);
   } finally {

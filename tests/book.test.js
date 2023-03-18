@@ -9,6 +9,7 @@ describe("/books", () => {
   } catch (error) {
     console.log(error.Promise);
   }
+
   afterEach(async () => {
     await Book.destroy({ where: {} });
   });
