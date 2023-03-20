@@ -18,12 +18,12 @@ const getModel = (model) => {
 //   return {};
 // };
 
-const removePassword = (obj) => {
-  if (obj.hasOwnProperty("password")) {
-    delete obj.password;
+const removePassword = (object) => {
+  if (object.hasOwnProperty("password")) {
+    delete object.password;
   }
 
-  return obj;
+  return object;
 };
 
 const getAllItems = async (res, model) => {
